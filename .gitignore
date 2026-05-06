@@ -1,0 +1,55 @@
+# ============================================================
+# SentinelHive .gitignore
+# Critical: NEVER commit honeypot data, logs, or secrets.
+# ============================================================
+
+# Honeypot runtime data and logs (contain attacker IPs, payloads, etc.)
+honeypots/*/data/
+honeypots/*/logs/
+honeypots/*/downloads/
+honeypots/*/tty/
+
+# ELK runtime data
+elk/elasticsearch/data/
+elk/logstash/data/
+elk/kibana/data/
+
+# Environment files (may contain credentials)
+.env
+.env.local
+*.env
+
+# ML artifacts
+ml/data/raw/
+ml/data/processed/
+ml/models/*.pkl
+ml/models/*.joblib
+ml/notebooks/.ipynb_checkpoints/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+*.egg-info/
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs (catch-all)
+*.log
+*.log.*
+
+# OS
+Thumbs.db
+desktop.ini
+
+# Keep empty directories tracked via .gitkeep files
+!.gitkeep

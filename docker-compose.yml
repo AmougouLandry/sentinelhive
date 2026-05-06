@@ -1,0 +1,29 @@
+# ============================================================
+# SentinelHive — Master Docker Compose
+# Services are added phase by phase. Currently empty skeleton.
+# ============================================================
+
+networks:
+  honeynet:
+    name: sentinelhive-honeynet
+    driver: bridge
+  siemnet:
+    name: sentinelhive-siemnet
+    driver: bridge
+
+volumes:
+  cowrie-logs:
+  dionaea-logs:
+  heralding-logs:
+  http-logs:
+  elasticsearch-data:
+
+services:
+  # Honeypots will be added here in Phase 1
+  # ELK stack will be added here in Phase 2
+  # Placeholder service so Compose doesn't error on empty file
+  placeholder:
+    image: alpine:latest
+    command: echo "SentinelHive skeleton ready. Services come in next sessions."
+    profiles:
+      - never
