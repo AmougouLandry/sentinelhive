@@ -1,0 +1,29 @@
+# ============================================================
+# Cowrie userdb.txt — Realistic credential policy
+# Format: username:UID:password
+# UID is purely cosmetic (what `id` returns inside Cowrie shell)
+# ============================================================
+
+# Classic root weak credentials (most-attacked combinations)
+root:0:root
+root:0:123456
+root:0:password
+root:0:admin
+root:0:toor
+root:0:1234
+
+# Default admin accounts
+admin:0:admin
+admin:0:password
+admin:0:123456
+
+# Common service accounts
+ubuntu:0:ubuntu
+user:0:user
+test:0:test
+oracle:0:oracle
+postgres:0:postgres
+mysql:0:mysql
+
+# Reject anything else (this is implicit — listing here for documentation)
+# !*:*:*

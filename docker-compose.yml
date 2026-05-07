@@ -1,6 +1,7 @@
 # ============================================================
 # SentinelHive — Master Docker Compose
-# Services are added phase by phase. Currently empty skeleton.
+# Cowrie configured via environment variables (official method)
+# Reference: https://hub.docker.com/r/cowrie/cowrie
 # ============================================================
 
 networks:
@@ -11,19 +12,52 @@ networks:
     name: sentinelhive-siemnet
     driver: bridge
 
-volumes:
-  cowrie-logs:
-  dionaea-logs:
-  heralding-logs:
-  http-logs:
-  elasticsearch-data:
-
 services:
-  # Honeypots will be added here in Phase 1
-  # ELK stack will be added here in Phase 2
-  # Placeholder service so Compose doesn't error on empty file
-  placeholder:
-    image: alpine:latest
-    command: echo "SentinelHive skeleton ready. Services come in next sessions."
-    profiles:
-      - never
+  # ============================================================
+  # Cowrie — SSH medium-interaction honeypot
+  # Config via COWRIE_<SECTION>_<KEY> environment variables
+  # Captures: login attempts, command sessions, downloaded payloads
+  # ============================================================
+  cowrie:
+    image: cowrie/cowrie:latest
+    container_name: sentinelhive-cowrie
+    restart: unless-stopped
+    networks:
+      - honeynet
+    ports:
+      # Host port 2222 → container port 2222 (SSH)
+      # Bind to localhost only (lab mode, no internet exposure)
+      - "127.0.0.1:2222:2222"
+    volumes:
+      # Custom userdb (realistic credential whitelist)
+      - ./honeypots/cowrie/config/userdb.txt:/cowrie/cowrie-git/etc/userdb.txt:ro
+      # Persist logs and downloads to host for analysis
+      - ./honeypots/cowrie/logs:/cowrie/cowrie-git/var/log/cowrie
+      - ./honeypots/cowrie/data:/cowrie/cowrie-git/var/lib/cowrie
+    environment:
+      # Honeypot identity
+      - COWRIE_HONEYPOT_HOSTNAME=svr01
+      - COWRIE_HONEYPOT_ARCH=linux-x64-lsb
+      - COWRIE_HONEYPOT_KERNEL_VERSION=5.15.0-91-generic
+      - COWRIE_HONEYPOT_KERNEL_BUILD_STRING=#101-Ubuntu SMP Thu Nov 9 12:42:24 UTC 2023
+      - COWRIE_HONEYPOT_HARDWARE_PLATFORM=x86_64
+      - COWRIE_HONEYPOT_OPERATING_SYSTEM=GNU/Linux
+      # Realistic auth: out of every 10 attempts, allow login on attempts 2-5
+      - COWRIE_HONEYPOT_AUTH_CLASS=AuthRandom
+      - COWRIE_HONEYPOT_AUTH_CLASS_PARAMETERS=2, 5, 10
+      # SSH banner mimicking modern Ubuntu
+      - COWRIE_SSH_VERSION=SSH-2.0-OpenSSH_8.9p1 Ubuntu-3ubuntu0.6
+      # Telnet disabled (SSH only for this phase)
+      - COWRIE_TELNET_ENABLED=no
+      # Timezone
+      - TZ=UTC
+    healthcheck:
+      test: ["CMD-SHELL", "ss -ltn | grep -q ':2222'"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    labels:
+      - "sentinelhive.role=honeypot"
+      - "sentinelhive.service=cowrie"
+      - "sentinelhive.protocol=ssh"
