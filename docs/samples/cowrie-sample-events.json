@@ -1,0 +1,67 @@
+[
+  {
+    "eventid": "cowrie.session.connect",
+    "src_ip": "172.18.0.1",
+    "src_port": 33872,
+    "dst_ip": "172.18.0.2",
+    "dst_port": 2222,
+    "session": "12d06f9219f6",
+    "protocol": "ssh",
+    "message": "New connection: 172.18.0.1:33872 (172.18.0.2:2222) [session: 12d06f9219f6]",
+    "sensor": "ed81e122da9c",
+    "uuid": "44c1f730-49f4-11f1-9985-9aeeda56b0fc",
+    "timestamp": "2026-05-07T09:10:01.247994Z"
+  },
+  {
+    "eventid": "cowrie.session.connect",
+    "src_ip": "172.18.0.1",
+    "src_port": 57120,
+    "dst_ip": "172.18.0.2",
+    "dst_port": 2222,
+    "session": "3a03d7e29a36",
+    "protocol": "ssh",
+    "message": "New connection: 172.18.0.1:57120 (172.18.0.2:2222) [session: 3a03d7e29a36]",
+    "sensor": "ed81e122da9c",
+    "uuid": "44c1f730-49f4-11f1-9985-9aeeda56b0fc",
+    "timestamp": "2026-05-07T09:10:14.675561Z"
+  },
+  {
+    "eventid": "cowrie.session.connect",
+    "src_ip": "172.18.0.1",
+    "src_port": 51122,
+    "dst_ip": "172.18.0.2",
+    "dst_port": 2222,
+    "session": "87748baf3029",
+    "protocol": "ssh",
+    "message": "New connection: 172.18.0.1:51122 (172.18.0.2:2222) [session: 87748baf3029]",
+    "sensor": "ed81e122da9c",
+    "uuid": "44c1f730-49f4-11f1-9985-9aeeda56b0fc",
+    "timestamp": "2026-05-07T09:11:28.184767Z"
+  },
+  {
+    "eventid": "cowrie.session.connect",
+    "src_ip": "172.18.0.1",
+    "src_port": 54826,
+    "dst_ip": "172.18.0.2",
+    "dst_port": 2222,
+    "session": "bf95c173b07b",
+    "protocol": "ssh",
+    "message": "New connection: 172.18.0.1:54826 (172.18.0.2:2222) [session: bf95c173b07b]",
+    "sensor": "c5180c4d0abb",
+    "uuid": "44c1f730-49f4-11f1-9985-9aeeda56b0fc",
+    "timestamp": "2026-05-07T09:19:33.233958Z"
+  },
+  {
+    "eventid": "cowrie.session.connect",
+    "src_ip": "172.18.0.1",
+    "src_port": 48242,
+    "dst_ip": "172.18.0.2",
+    "dst_port": 2222,
+    "session": "3722a3f54eb5",
+    "protocol": "ssh",
+    "message": "New connection: 172.18.0.1:48242 (172.18.0.2:2222) [session: 3722a3f54eb5]",
+    "sensor": "5808b4047277",
+    "uuid": "44c1f730-49f4-11f1-9985-9aeeda56b0fc",
+    "timestamp": "2026-05-07T09:25:02.409361Z"
+  }
+]
