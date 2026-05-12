@@ -1,0 +1,210 @@
+[
+  {
+    "connection": {
+      "protocol": "ftpd",
+      "transport": "tcp",
+      "type": "accept"
+    },
+    "dst_ip": "172.18.0.2",
+    "dst_port": 21,
+    "src_hostname": "",
+    "src_ip": "172.18.0.1",
+    "src_port": 46142,
+    "timestamp": "2026-05-12T07:18:39.154635"
+  },
+  {
+    "connection": {
+      "protocol": "ftpd",
+      "transport": "tcp",
+      "type": "accept"
+    },
+    "dst_ip": "172.18.0.2",
+    "dst_port": 21,
+    "src_hostname": "",
+    "src_ip": "172.18.0.1",
+    "src_port": 52408,
+    "timestamp": "2026-05-12T07:21:01.615653",
+    "ftp": {
+      "commands": [
+        {
+          "command": "USER",
+          "arguments": [
+            "admin"
+          ]
+        },
+        {
+          "command": "PASS",
+          "arguments": [
+            "admin"
+          ]
+        },
+        {
+          "command": "QUIT",
+          "arguments": []
+        }
+      ]
+    },
+    "credentials": [
+      {
+        "password": "admin",
+        "username": "admin"
+      }
+    ]
+  },
+  {
+    "connection": {
+      "protocol": "ftpd",
+      "transport": "tcp",
+      "type": "accept"
+    },
+    "dst_ip": "172.18.0.2",
+    "dst_port": 21,
+    "src_hostname": "",
+    "src_ip": "172.18.0.1",
+    "src_port": 52414,
+    "timestamp": "2026-05-12T07:21:01.690903",
+    "ftp": {
+      "commands": [
+        {
+          "command": "USER",
+          "arguments": [
+            "root"
+          ]
+        },
+        {
+          "command": "PASS",
+          "arguments": [
+            "toor"
+          ]
+        },
+        {
+          "command": "QUIT",
+          "arguments": []
+        }
+      ]
+    },
+    "credentials": [
+      {
+        "password": "toor",
+        "username": "root"
+      }
+    ]
+  },
+  {
+    "connection": {
+      "protocol": "ftpd",
+      "transport": "tcp",
+      "type": "accept"
+    },
+    "dst_ip": "172.18.0.2",
+    "dst_port": 21,
+    "src_hostname": "",
+    "src_ip": "172.18.0.1",
+    "src_port": 52424,
+    "timestamp": "2026-05-12T07:21:01.725075",
+    "ftp": {
+      "commands": [
+        {
+          "command": "USER",
+          "arguments": [
+            "anonymous"
+          ]
+        },
+        {
+          "command": "PASS",
+          "arguments": [
+            "anonymous"
+          ]
+        },
+        {
+          "command": "LIST",
+          "arguments": []
+        }
+      ]
+    },
+    "credentials": [
+      {
+        "password": "anonymous",
+        "username": "anonymous"
+      }
+    ]
+  },
+  {
+    "connection": {
+      "protocol": "httpd",
+      "transport": "tcp",
+      "type": "accept"
+    },
+    "dst_ip": "172.18.0.2",
+    "dst_port": 80,
+    "src_hostname": "",
+    "src_ip": "172.18.0.1",
+    "src_port": 53400,
+    "timestamp": "2026-05-12T07:21:01.943387"
+  },
+  {
+    "connection": {
+      "protocol": "httpd",
+      "transport": "tcp",
+      "type": "accept"
+    },
+    "dst_ip": "172.18.0.2",
+    "dst_port": 80,
+    "src_hostname": "",
+    "src_ip": "172.18.0.1",
+    "src_port": 53402,
+    "timestamp": "2026-05-12T07:21:02.086275"
+  },
+  {
+    "connection": {
+      "protocol": "httpd",
+      "transport": "tcp",
+      "type": "accept"
+    },
+    "dst_ip": "172.18.0.2",
+    "dst_port": 80,
+    "src_hostname": "",
+    "src_ip": "172.18.0.1",
+    "src_port": 53416,
+    "timestamp": "2026-05-12T07:21:02.118206"
+  },
+  {
+    "connection": {
+      "protocol": "httpd",
+      "transport": "tcp",
+      "type": "accept"
+    },
+    "dst_ip": "172.18.0.2",
+    "dst_port": 80,
+    "src_hostname": "",
+    "src_ip": "172.18.0.1",
+    "src_port": 53422,
+    "timestamp": "2026-05-12T07:21:02.164392"
+  },
+  {
+    "connection": {
+      "protocol": "Memcache",
+      "transport": "tcp",
+      "type": "accept"
+    },
+    "dst_ip": "172.18.0.2",
+    "dst_port": 11211,
+    "src_hostname": "",
+    "src_ip": "172.18.0.1",
+    "src_port": 44882,
+    "timestamp": "2026-05-12T07:21:02.197638"
+  },
+  {
+    "connection": {
+      "protocol": "Memcache",
+      "transport": "tcp",
+      "type": "accept"
+    },
+    "dst_ip": "172.18.0.2",
+    "dst_port": 11211,
+    "src_hostname": "",
+    "src_ip": "172.18.0.1",
+    "src_port": 44890,
+    "timestamp": "2026-05-12T07:21:04.211061"
+  }
+]

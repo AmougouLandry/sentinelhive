@@ -1,7 +1,11 @@
 # ============================================================
 # SentinelHive — Master Docker Compose
-# Cowrie configured via environment variables (official method)
+# Honeypot fleet: Cowrie (SSH), Dionaea (multi-protocol)
 # Reference: https://hub.docker.com/r/cowrie/cowrie
+#            https://hub.docker.com/r/dinotools/dionaea
+# Lab-mode port mapping: host 13xxx → container service port
+# This avoids conflicts with Windows services on the host.
+# On a real VPS deployment, ports would be remapped to standard.
 # ============================================================
 
 networks:
@@ -15,7 +19,7 @@ networks:
 services:
   # ============================================================
   # Cowrie — SSH medium-interaction honeypot
-  # Config via COWRIE_<SECTION>_<KEY> environment variables
+  # Configured via official COWRIE_<SECTION>_<KEY> environment variables
   # Captures: login attempts, command sessions, downloaded payloads
   # ============================================================
   cowrie:
@@ -25,34 +29,25 @@ services:
     networks:
       - honeynet
     ports:
-      # Host port 2222 → container port 2222 (SSH)
-      # Bind to localhost only (lab mode, no internet exposure)
       - "127.0.0.1:2222:2222"
     volumes:
-      # Custom userdb (realistic credential whitelist)
       - ./honeypots/cowrie/config/userdb.txt:/cowrie/cowrie-git/etc/userdb.txt:ro
-      # Persist logs and downloads to host for analysis
       - ./honeypots/cowrie/logs:/cowrie/cowrie-git/var/log/cowrie
       - ./honeypots/cowrie/data:/cowrie/cowrie-git/var/lib/cowrie
     environment:
-      # Honeypot identity
       - COWRIE_HONEYPOT_HOSTNAME=svr01
       - COWRIE_HONEYPOT_ARCH=linux-x64-lsb
       - COWRIE_HONEYPOT_KERNEL_VERSION=5.15.0-91-generic
       - COWRIE_HONEYPOT_KERNEL_BUILD_STRING=#101-Ubuntu SMP Thu Nov 9 12:42:24 UTC 2023
       - COWRIE_HONEYPOT_HARDWARE_PLATFORM=x86_64
       - COWRIE_HONEYPOT_OPERATING_SYSTEM=GNU/Linux
-      # Realistic auth: out of every 10 attempts, allow login on attempts 2-5
       - COWRIE_HONEYPOT_AUTH_CLASS=AuthRandom
       - COWRIE_HONEYPOT_AUTH_CLASS_PARAMETERS=2, 5, 10
-      # SSH banner mimicking modern Ubuntu
       - COWRIE_SSH_VERSION=SSH-2.0-OpenSSH_8.9p1 Ubuntu-3ubuntu0.6
-      # Telnet disabled (SSH only for this phase)
       - COWRIE_TELNET_ENABLED=no
-      # Timezone
       - TZ=UTC
     healthcheck:
-      test: ["CMD-SHELL", "ss -ltn | grep -q ':2222'"]
+      test: ["CMD-SHELL", "python3 -c \"import socket; s=socket.socket(); s.settimeout(2); s.connect(('127.0.0.1', 21))\""]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -61,3 +56,45 @@ services:
       - "sentinelhive.role=honeypot"
       - "sentinelhive.service=cowrie"
       - "sentinelhive.protocol=ssh"
+
+  # ============================================================
+  # Dionaea — multi-protocol low-interaction honeypot
+  # Captures: malware binaries dropped via SMB/FTP, exploit attempts,
+  #           protocol fingerprinting across 16+ services
+  # Lab-mode ports: host 13xxx → container service port
+  # ============================================================
+  dionaea:
+    image: dinotools/dionaea:latest
+    container_name: sentinelhive-dionaea
+    restart: unless-stopped
+    networks:
+      - honeynet
+    ports:
+      # host_port:container_port — host_port shifted into 13xxx safe range
+      - "127.0.0.1:13021:21"          # FTP        (real port: 21)
+      - "127.0.0.1:13069:69/udp"      # TFTP       (real port: 69)
+      - "127.0.0.1:13080:80"          # HTTP       (real port: 80)
+      - "127.0.0.1:13135:135"         # MS RPC EPMAP (real port: 135)
+      - "127.0.0.1:13443:443"         # HTTPS      (real port: 443)
+      - "127.0.0.1:13445:445"         # SMB        (real port: 445)
+      - "127.0.0.1:13433:1433"        # MSSQL      (real port: 1433)
+      - "127.0.0.1:13306:3306"        # MySQL/MariaDB (real port: 3306)
+      - "127.0.0.1:13883:1883"        # MQTT       (real port: 1883)
+      - "127.0.0.1:13560:5060/udp"    # SIP UDP    (real port: 5060)
+      - "127.0.0.1:13211:11211"       # Memcache   (real port: 11211)
+    volumes:
+      - ./honeypots/dionaea/etc:/opt/dionaea/etc/
+      - ./honeypots/dionaea/var/lib:/opt/dionaea/var/lib/
+      - ./honeypots/dionaea/var/log:/opt/dionaea/var/log/
+    environment:
+      - TZ=UTC
+    healthcheck:
+      test: ["CMD-SHELL", "ss -ltn | grep -q ':21'"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    labels:
+      - "sentinelhive.role=honeypot"
+      - "sentinelhive.service=dionaea"
+      - "sentinelhive.protocol=multi"
