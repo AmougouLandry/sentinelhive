@@ -57,3 +57,7 @@ desktop.ini
 # Dionaea runtime data (logs, captured binaries, bistreams)
 # Keep configs (honeypots/dionaea/etc/), exclude var/
 honeypots/dionaea/var/
+
+# Heralding runtime data (logs, captured credentials)
+# Keep configs (honeypots/heralding/config/), exclude logs/
+honeypots/heralding/logs/

@@ -1,0 +1,217 @@
+[
+  {
+    "timestamp": "2026-05-12 08:28:45.019605",
+    "duration": 0,
+    "session_id": "df0bd6a2-e016-4fa5-8914-720924cbbdf4",
+    "source_ip": "172.18.0.1",
+    "source_port": 38706,
+    "destination_ip": "172.18.0.2",
+    "destination_port": 21,
+    "protocol": "ftp",
+    "num_auth_attempts": 1,
+    "auth_attempts": [
+      {
+        "timestamp": "2026-05-12 08:28:45.026989",
+        "username": "admin",
+        "password": "Password123"
+      }
+    ],
+    "session_ended": true,
+    "auxiliary_data": {}
+  },
+  {
+    "timestamp": "2026-05-12 08:28:57.086199",
+    "duration": 4,
+    "session_id": "4921fb11-e3d1-49e8-b497-46b875dbe469",
+    "source_ip": "172.18.0.1",
+    "source_port": 33992,
+    "destination_ip": "172.18.0.2",
+    "destination_port": 25,
+    "protocol": "smtp",
+    "num_auth_attempts": 1,
+    "auth_attempts": [
+      {
+        "timestamp": "2026-05-12 08:29:00.085270",
+        "username": "admin",
+        "password": "password"
+      }
+    ],
+    "session_ended": true,
+    "auxiliary_data": {}
+  },
+  {
+    "timestamp": "2026-05-12 08:29:01.098476",
+    "duration": 2,
+    "session_id": "a2fb7375-4f6d-4f74-bb89-de48e2d1de7d",
+    "source_ip": "172.18.0.1",
+    "source_port": 55186,
+    "destination_ip": "172.18.0.2",
+    "destination_port": 110,
+    "protocol": "pop3",
+    "num_auth_attempts": 1,
+    "auth_attempts": [
+      {
+        "timestamp": "2026-05-12 08:29:02.097484",
+        "username": "admin",
+        "password": "Password123"
+      }
+    ],
+    "session_ended": true,
+    "auxiliary_data": {}
+  },
+  {
+    "timestamp": "2026-05-12 08:29:03.117833",
+    "duration": 1,
+    "session_id": "a8f9ca11-f9d3-432d-8e56-d8cae0609747",
+    "source_ip": "172.18.0.1",
+    "source_port": 41460,
+    "destination_ip": "172.18.0.2",
+    "destination_port": 143,
+    "protocol": "imap",
+    "num_auth_attempts": 1,
+    "auth_attempts": [
+      {
+        "timestamp": "2026-05-12 08:29:03.118555",
+        "username": "admin",
+        "password": "Password123"
+      }
+    ],
+    "session_ended": true,
+    "auxiliary_data": {}
+  },
+  {
+    "timestamp": "2026-05-12 08:29:04.289852",
+    "duration": 0,
+    "session_id": "3612a704-ed9d-4243-ac82-34eb4dbd29ed",
+    "source_ip": "172.18.0.1",
+    "source_port": 33048,
+    "destination_ip": "172.18.0.2",
+    "destination_port": 80,
+    "protocol": "http",
+    "num_auth_attempts": 1,
+    "auth_attempts": [
+      {
+        "timestamp": "2026-05-12 08:29:04.296907",
+        "username": "admin",
+        "password": "Password123"
+      }
+    ],
+    "session_ended": true,
+    "auxiliary_data": {
+      "Host": "127.0.0.1:14080",
+      "Authorization": "Basic YWRtaW46UGFzc3dvcmQxMjM=",
+      "User-Agent": "curl/7.81.0",
+      "Accept": "*/*"
+    }
+  },
+  {
+    "timestamp": "2026-05-12 08:29:04.330233",
+    "duration": 0,
+    "session_id": "48ef1c85-f8bd-4397-89e7-ec35f385bf89",
+    "source_ip": "172.18.0.1",
+    "source_port": 33050,
+    "destination_ip": "172.18.0.2",
+    "destination_port": 80,
+    "protocol": "http",
+    "num_auth_attempts": 1,
+    "auth_attempts": [
+      {
+        "timestamp": "2026-05-12 08:29:04.331573",
+        "username": "root",
+        "password": "toor"
+      }
+    ],
+    "session_ended": true,
+    "auxiliary_data": {
+      "Host": "127.0.0.1:14080",
+      "Authorization": "Basic cm9vdDp0b29y",
+      "User-Agent": "curl/7.81.0",
+      "Accept": "*/*"
+    }
+  },
+  {
+    "timestamp": "2026-05-12 08:29:04.385868",
+    "duration": 0,
+    "session_id": "7f66bbe6-c9cc-4412-939f-298ddb2efbfa",
+    "source_ip": "172.18.0.1",
+    "source_port": 52538,
+    "destination_ip": "172.18.0.2",
+    "destination_port": 443,
+    "protocol": "https",
+    "num_auth_attempts": 1,
+    "auth_attempts": [
+      {
+        "timestamp": "2026-05-12 08:29:04.386779",
+        "username": "admin",
+        "password": "admin"
+      }
+    ],
+    "session_ended": true,
+    "auxiliary_data": {
+      "Host": "127.0.0.1:14443",
+      "Authorization": "Basic YWRtaW46YWRtaW4=",
+      "User-Agent": "curl/7.81.0",
+      "Accept": "*/*"
+    }
+  },
+  {
+    "timestamp": "2026-05-12 08:28:45.043628",
+    "duration": 29,
+    "session_id": "c411c3d0-ddcd-4f14-b10a-bfbba6b80e7e",
+    "source_ip": "172.18.0.1",
+    "source_port": 52014,
+    "destination_ip": "172.18.0.2",
+    "destination_port": 23,
+    "protocol": "telnet",
+    "num_auth_attempts": 1,
+    "auth_attempts": [
+      {
+        "timestamp": "2026-05-12 08:28:46.049667",
+        "username": "root",
+        "password": "toor"
+      }
+    ],
+    "session_ended": true,
+    "auxiliary_data": {}
+  },
+  {
+    "timestamp": "2026-05-12 08:32:20.567253",
+    "duration": 0,
+    "session_id": "d3692d9d-1daa-472e-b5d9-5e8cae247a7e",
+    "source_ip": "172.18.0.1",
+    "source_port": 56144,
+    "destination_ip": "172.18.0.2",
+    "destination_port": 21,
+    "protocol": "ftp",
+    "num_auth_attempts": 1,
+    "auth_attempts": [
+      {
+        "timestamp": "2026-05-12 08:32:20.569732",
+        "username": "admin",
+        "password": "Password123"
+      }
+    ],
+    "session_ended": true,
+    "auxiliary_data": {}
+  },
+  {
+    "timestamp": "2026-05-12 08:32:32.614988",
+    "duration": 4,
+    "session_id": "a8ac022a-f37d-40e9-b084-d9a6ec117d66",
+    "source_ip": "172.18.0.1",
+    "source_port": 39736,
+    "destination_ip": "172.18.0.2",
+    "destination_port": 25,
+    "protocol": "smtp",
+    "num_auth_attempts": 1,
+    "auth_attempts": [
+      {
+        "timestamp": "2026-05-12 08:32:35.622171",
+        "username": "admin",
+        "password": "password"
+      }
+    ],
+    "session_ended": true,
+    "auxiliary_data": {}
+  }
+]

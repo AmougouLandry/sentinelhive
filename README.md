@@ -6,6 +6,7 @@
 [![License](https://img.shields.io/badge/license-MIT-blue)]()
 [![Cowrie](https://img.shields.io/badge/cowrie-running-success)]()
 [![Dionaea](https://img.shields.io/badge/dionaea-running-success)]()
+[![Heralding](https://img.shields.io/badge/heralding-running-success)]()
 
 ## Overview
 
@@ -18,7 +19,7 @@ SentinelHive is a homegrown threat intelligence platform that captures, analyzes
 │   ┌─────────┐  ┌──────────┐  ┌──────────┐  ┌─────────┐ │
 │   │ Cowrie  │  │ Dionaea  │  │Heralding │  │  HTTP   │ │
 │   │ (SSH)   │  │ (SMB/FTP)│  │ (creds)  │  │ (web)   │ │
-│   │   ✓     │  │    ✓     │  │          │  │         │ │
+│   │   ✓     │  │    ✓     │  │    ✓     │  │         │ │
 │   └────┬────┘  └────┬─────┘  └────┬─────┘  └────┬────┘ │
 │        └────────────┴─────────────┴─────────────┘       │
 │                          │                               │
@@ -35,13 +36,14 @@ SentinelHive is a homegrown threat intelligence platform that captures, analyzes
 │   Feature engineering → Clustering → Persona analysis   │
 └─────────────────────────────────────────────────────────┘
 
+
 ## Project Status
 
 | Phase | Component | Status |
 |-------|-----------|--------|
 | 1 | Cowrie SSH honeypot (Docker)         | Complete |
 | 1 | Dionaea (SMB/FTP/MSSQL honeypot)     | Complete |
-| 1 | Heralding (multi-protocol creds)     | Planned |
+| 1 | Heralding (multi-protocol creds)     | Complete |
 | 1 | Custom HTTP honeypot                 | Planned |
 | 2 | Elasticsearch + Logstash + Kibana    | Planned |
 | 2 | Filebeat log shipping pipeline       | Planned |
@@ -81,6 +83,30 @@ Event schema example (FTP credential capture):
 }
 ```
 
+### Heralding — pure credential harvester
+
+Heralding is built from the official `johnnykv/heralding` source repository and deployed in Docker, listening on **16 protocols** (FTP, SSH, Telnet, SMTP, SMTPS, HTTP, HTTPS, POP3, POP3S, IMAP, IMAPS, MySQL, PostgreSQL, RDP, VNC, SOCKS5). Unlike Cowrie (medium-interaction) and Dionaea (protocol emulation), Heralding has zero post-auth interaction — it accepts credentials, logs them, and closes the session. This captures the bulk of internet credential-stuffing traffic: bots that probe auth endpoints without engaging further.
+
+Validated capture of 18 credential attempts across 8 protocols (FTP, SSH, Telnet, SMTP, POP3, IMAP, HTTP, HTTPS). Logs are written in three formats: `log_session.json` (full session detail), `log_session.csv` (summary), and `log_auth.csv` (one row per credential pair). Sample data committed at [`docs/samples/heralding-sample-events.json`](docs/samples/heralding-sample-events.json).
+
+Event schema example (FTP credential capture):
+
+```json
+{
+  "timestamp": "2026-05-12 08:28:45.019605",
+  "duration": 0,
+  "session_id": "df0bd6a2-e016-4fa5-8914-720924cbbdf4",
+  "source_ip": "172.18.0.1",
+  "source_port": 38706,
+  "destination_port": 21,
+  "protocol": "ftp",
+  "num_auth_attempts": 1,
+  "auth_attempts": [
+    {"timestamp": "2026-05-12 08:28:45.026989", "username": "admin", "password": "Password123"}
+  ]
+}
+```
+
 ## Quick Start
 
 > Run only in an isolated lab environment. Honeypots intentionally expose vulnerable services.
@@ -89,24 +115,32 @@ Event schema example (FTP credential capture):
 git clone git@github.com:AmougouLandry/sentinelhive.git
 cd sentinelhive
 
-# Set ownership for Cowrie's container UID
+# Cowrie: set ownership for the container's UID
 sudo mkdir -p honeypots/cowrie/data/tty honeypots/cowrie/data/downloads
 sudo chown -R 999:999 honeypots/cowrie/data honeypots/cowrie/logs
+
+# Heralding: build the image from source (no Docker Hub image available)
+git clone https://github.com/johnnykv/heralding.git /tmp/heralding
+docker build -t sentinelhive/heralding:latest /tmp/heralding
+rm -rf /tmp/heralding
 
 # Bring up all honeypots
 docker compose up -d
 
-# Test Cowrie
+# Test Cowrie (SSH)
 ssh root@localhost -p 2222
 # Try password: admin (after a couple failures, AuthRandom will accept)
 
-# Test Dionaea FTP
+# Test Dionaea (FTP)
 echo -e "USER admin\r\nPASS admin\r\nQUIT" | nc 127.0.0.1 13021
+
+# Test Heralding (FTP credential capture)
+echo -e "USER admin\r\nPASS Password123\r\nQUIT" | nc 127.0.0.1 14021
 ```
 
 ## Tech Stack
 
-- **Honeypots**: Cowrie (deployed), Dionaea (deployed), Heralding, custom HTTP (planned)
+- **Honeypots**: Cowrie (deployed), Dionaea (deployed), Heralding (deployed), custom HTTP (planned)
 - **SIEM**: Elasticsearch, Logstash, Kibana, Filebeat (Phase 2)
 - **ML**: Python 3.10, scikit-learn, pandas, HDBSCAN (Phase 3)
 - **Orchestration**: Docker, Docker Compose
@@ -127,6 +161,12 @@ echo -e "USER admin\r\nPASS admin\r\nQUIT" | nc 127.0.0.1 13021
 **Dionaea SIP service SQLite race.** Dionaea 0.11.0's SIP module initializes its session database from multiple worker contexts simultaneously, causing `sqlite3.OperationalError: database is locked` on container start. Non-fatal but pollutes logs. Disabled by renaming `services-enabled/sip.yaml` to `sip.yaml.disabled` — Dionaea only loads files matching `.yaml`.
 
 **File URI parsing requires triple-slash for absolute paths.** Dionaea's `log_json.yaml` accepts a `file://` URI for the output path. Configured as `file://var/log/dionaea/dionaea.json` (two slashes), Dionaea parsed this as `file://var` (authority=var) + `/log/dionaea/...` (path) and tried to write to `/log/dionaea/dionaea.json` at the filesystem root. The error message `Unable to open file /log/dionaea/dionaea.json` was the clue — the missing `/var` prefix revealed URI parsing was splitting the string differently than expected. Fix: use `file:///opt/dionaea/var/log/dionaea/dionaea.json` with three slashes — RFC 8089 requires triple-slash to signal absolute path with empty authority.
+
+**Heralding has no Docker Hub image — build from source.** The official `johnnykv/heralding` repo doesn't publish a prebuilt image. The supported pattern is `git clone` then `docker build`. Adds ~4 minutes to first deployment but eliminates third-party image drift risk (the same issue that bit us with Cowrie's bundled paths). For SentinelHive we tag the local build as `sentinelhive/heralding:latest` to keep the namespace clear.
+
+**Docker bind-mounting files requires pre-creating them on the host.** Heralding writes three log files in its working directory. When bind-mounting a *file* that doesn't exist on the host, Docker silently creates an empty *directory* in its place. The container then opens the path as a file and fails with `IsADirectoryError`. Fix: `touch` the empty target files on the host before `docker compose up`, OR (cleaner) use absolute paths in the app's config and mount a single directory instead. We used the directory approach by setting Heralding's log paths to `/var/log/heralding/log_*` and bind-mounting `honeypots/heralding/logs:/var/log/heralding`.
+
+**Healthcheck noise pollutes credential-harvester data.** Our Python healthcheck connects to SSH port 22 every 30 seconds to verify Heralding is alive. Heralding faithfully logs every one of those connects as a 0-auth-attempt session. Result: ~80% of `log_session.json` entries are healthcheck artifacts. This is harmless for the honeypot itself but will need filtering in Phase 2 (Logstash) before the ML stage, since healthcheck sessions would dominate any unsupervised clustering. General lesson: any synthetic traffic into a low-interaction honeypot must be either suppressed or filterable downstream.
 
 ## Documentation
 
