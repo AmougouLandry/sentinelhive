@@ -53,3 +53,7 @@ desktop.ini
 
 # Keep empty directories tracked via .gitkeep files
 !.gitkeep
+
+# Dionaea runtime data (logs, captured binaries, bistreams)
+# Keep configs (honeypots/dionaea/etc/), exclude var/
+honeypots/dionaea/var/
