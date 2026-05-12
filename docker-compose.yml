@@ -98,3 +98,52 @@ services:
       - "sentinelhive.role=honeypot"
       - "sentinelhive.service=dionaea"
       - "sentinelhive.protocol=multi"
+
+
+
+
+
+# ============================================================
+  # Heralding — pure credential harvester
+  # Captures: credential brute-force attempts across 14 protocols
+  # No protocol emulation depth — bots that just spam auth and disconnect
+  # ============================================================
+  heralding:
+    image: sentinelhive/heralding:latest
+    container_name: sentinelhive-heralding
+    restart: unless-stopped
+    networks:
+      - honeynet
+    ports:
+      # Lab-mode port remapping: host 14xxx -> container service port
+      - "127.0.0.1:14021:21"           # FTP
+      - "127.0.0.1:14022:22"           # SSH
+      - "127.0.0.1:14023:23"           # Telnet
+      - "127.0.0.1:14025:25"           # SMTP
+      - "127.0.0.1:14080:80"           # HTTP
+      - "127.0.0.1:14110:110"          # POP3
+      - "127.0.0.1:14143:143"          # IMAP
+      - "127.0.0.1:14443:443"          # HTTPS
+      - "127.0.0.1:14465:465"          # SMTPS
+      - "127.0.0.1:14993:993"          # IMAPS
+      - "127.0.0.1:14995:995"          # POP3S
+      - "127.0.0.1:14306:3306"         # MySQL
+      - "127.0.0.1:14389:3389"         # RDP
+      - "127.0.0.1:14432:5432"         # PostgreSQL
+      - "127.0.0.1:14081:1080"         # SOCKS5
+      - "127.0.0.1:14900:5900"         # VNC
+    volumes:
+      - ./honeypots/heralding/config/heralding.yml:/heralding.yml:ro
+      - ./honeypots/heralding/logs:/var/log/heralding
+    environment:
+      - TZ=UTC
+    healthcheck:
+      test: ["CMD-SHELL", "python3 -c \"import socket; s=socket.socket(); s.settimeout(2); s.connect(('127.0.0.1', 22))\""]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    labels:
+      - "sentinelhive.role=honeypot"
+      - "sentinelhive.service=heralding"
+      - "sentinelhive.protocol=multi"
